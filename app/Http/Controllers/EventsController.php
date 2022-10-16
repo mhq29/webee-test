@@ -100,7 +100,16 @@ class EventsController extends BaseController
     ]
      */
 
+    /**
+     * Get events with workshops.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getEventsWithWorkshops() {
+        $all_events = DB::table('events')->select('events.id AS id', 'events.name AS name', 'events.created_at AS created_at', 'events.updated_at AS updated_at', 'workshops.* as workshops')
+        ->leftjoin('workshops', 'workshops.event_id', '=', 'events.id')
+        ->get()->toArray();
+        dd($all_events);
         throw new \Exception('implement in coding task 1');
     }
 
@@ -179,6 +188,10 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
+        $future_events = DB::table('events')->select('events.id AS id', 'events.name AS name', 'events.created_at AS created_at', 'events.updated_at AS updated_at', 'workshops.* as workshops')
+        ->leftjoin('workshops', 'workshops.event_id', '=', 'events.id')
+        ->whereDate('workshops.created_at','>', Carbon::now())
+        ->get()->toArray();
         throw new \Exception('implement in coding task 2');
     }
 }
